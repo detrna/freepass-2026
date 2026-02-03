@@ -1,0 +1,72 @@
+{
+	"info": {
+		"_postman_id": "05f472cb-c4bc-453c-9d3a-7e498dfadc1e",
+		"name": "BCC_Canteen_API Request",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "52045580",
+		"_collection_link": "https://himselfunderscore-3117970.postman.co/workspace/dzakiy's-Workspace~9d992d95-dab2-4e6b-8888-93ad807c9880/collection/52045580-05f472cb-c4bc-453c-9d3a-7e498dfadc1e?action=share&source=collection_link&creator=52045580"
+	},
+	"item": [],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{accessToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"if (pm.response.code === 401) {\r",
+					"  const error = pm.response.json();\r",
+					"\r",
+					"  if (error.code === \"ACCESS_TOKEN_EXPIRED\") {\r",
+					"    pm.sendRequest({\r",
+					"      url: pm.environment.get(\"refresh_url\"),\r",
+					"      method: \"POST\",\r",
+					"      header: {\r",
+					"        \"Content-Type\": \"application/json\",\r",
+					"      },\r",
+					"    }, function (err, res) {\r",
+					"      if (err) {\r",
+					"        console.error(\"Refresh failed\", err);\r",
+					"        return;\r",
+					"      }\r",
+					"\r",
+					"      const data = res.json();\r",
+					"      pm.environment.set(\"access_token\", data.accessToken);\r",
+					"\r",
+					"      pm.sendRequest(pm.request);\r",
+					"    });\r",
+					"  }\r",
+					"}\r",
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"value": "",
+			"type": "string",
+			"disabled": true
+		}
+	]
+}
