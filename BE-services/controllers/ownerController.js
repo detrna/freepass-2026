@@ -34,6 +34,8 @@ const updateMenu = async (req, res) => {
   };
 
   await Menu.updateMenu(newMenu);
+
+  res.json({ message: "Menu updated successfully" });
 };
 
 const deleteMenu = async (req, res) => {
@@ -46,6 +48,8 @@ const deleteMenu = async (req, res) => {
     return res.status(403).json({ message: "This user didn't own this menu" });
 
   await Menu.deleteMenu(menu);
+
+  res.json({ message: "Menu deleted successfully" });
 };
 
 module.exports = { createMenu, updateMenu, deleteMenu };
