@@ -5,10 +5,22 @@ const { authenticate } = require("../middleware/authenticate");
 const { roleGuard } = require("../middleware/roleGuard");
 
 router.post(
-  "/create",
+  "/create-menu",
   authenticate,
   roleGuard("owner"),
   menuController.createMenu,
+);
+router.put(
+  "/update-menu",
+  authenticate,
+  roleGuard("owner"),
+  menuController.updateMenu,
+);
+router.delete(
+  "/delete-menu/:id",
+  authenticate,
+  roleGuard("owner"),
+  menuController.deleteMenu,
 );
 
 module.exports = router;
