@@ -1,9 +1,12 @@
 const validator = require("validator");
 
 const validatePhone = (req, res, next) => {
-  const { phone } = req.body;
+  const phone = req.body?.phone;
 
-  if (!phone) next();
+  if (!phone) {
+    next();
+    return;
+  }
 
   const phoneValidation = validator.isMobilePhone(phone, "any");
   phoneValidation

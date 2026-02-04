@@ -8,16 +8,13 @@ const User = {
     return rows[0];
   },
   findById: async (id) => {
-    const [rows] = await pool.query(
-      "SELECT name, email, hashed_password, phone FROM user WHERE id = ?",
-      [id],
-    );
+    const [rows] = await pool.query("SELECT * FROM user WHERE id = ?", [id]);
     return rows[0];
   },
-  createUser: async (name, email, password) => {
+  createUser: async (user) => {
     const [result] = await pool.query(
-      "INSERT INTO user (name, email, hashed_password) VALUES (?, ?, ?)",
-      [name, email, password],
+      "INSERT INTO user (name, email, hashed_password, role) VALUES (?, ?, ?, ?)",
+      [user.name, user.email, user.password, user.role],
     );
     return result;
   },

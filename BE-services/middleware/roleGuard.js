@@ -1,6 +1,7 @@
 const roleGuard = (allowedRole) => {
   return (req, res, next) => {
     const user = req.user;
+    console.log(user);
     if (user.role !== allowedRole)
       return res
         .status(403)

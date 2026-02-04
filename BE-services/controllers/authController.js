@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const { AUTH_CONFIG } = require("../config/constant");
+const Canteen = require("../models/canteenModel");
 
 const register = async (req, res) => {
   try {
@@ -21,12 +22,7 @@ const register = async (req, res) => {
       role: role || "student",
     };
 
-    const createdUser = await User.createUser(
-      user.name,
-      user.email,
-      user.password,
-      user.role,
-    );
+    const createdUser = await User.createUser(user);
 
     const payload = {
       message: "Account succesfully registered",
@@ -75,11 +71,16 @@ const login = async (req, res) => {
   if (!isMatch)
     return res.status(401).json({ message: "Incorrect email or password" });
 
-  const jwtPayload = {
+  let jwtPayload = {
     id: user.id,
     name: user.name,
     role: user.role,
   };
+
+  if (user.role === "owner") {
+    const canteen = await Canteen.findByUserId(user.id);
+    jwtPayload = { ...jwtPayload, canteen_id: canteen.id };
+  }
 
   const accessToken = jwt.sign(
     jwtPayload,
@@ -143,8 +144,8 @@ const refresh = (req, res) => {
 };
 
 const logout = (req, res) => {
-  res.clearCokkie("access_token", AUTH_CONFIG.COOKIE);
-  res.clearCokkie("refresh_token", AUTH_CONFIG.COOKIE);
+  res.clearCookie("access_token", AUTH_CONFIG.COOKIE);
+  res.clearCookie("refresh_token", AUTH_CONFIG.COOKIE);
   res.json({ message: "Successfully logged out" });
 };
 

@@ -66,11 +66,6 @@ const updateProfile = async (req, res) => {
 
     return res.json({
       message: "User updated successfully",
-      user: {
-        name: updatedData.name,
-        email: updatedData.email,
-        phone: updatedData.phone,
-      },
     });
   } catch (err) {
     console.log(err);
@@ -81,11 +76,13 @@ const updateProfile = async (req, res) => {
 const getProfile = async (req, res) => {
   const user = req.user;
   const profile = await User.findById(user.id);
+  console.log(profile);
   const payload = {
     id: profile.id,
     name: profile.name,
     email: profile.email,
     phone: profile.phone,
+    role: profile.role,
   };
   res.json(payload);
 };
@@ -94,13 +91,10 @@ const deleteAccount = async (req, res) => {
   const user = req.user;
   await User.deleteUser(user.id);
 
-  const payload = { message: "Account succesfully deleted" };
-  if (user.role === "admin") return res.json(payload);
+  res.clearCookie("access_token", AUTH_CONFIG.COOKIE);
+  res.clearCookie("refresh_token", AUTH_CONFIG.COOKIE);
 
-  res.clearCokkie("access_token", AUTH_CONFIG.COOKIE);
-  res.clearCokkie("refresh_token", AUTH_CONFIG.COOKIE);
-
-  res.json(payload);
+  res.json({ message: "Account successfully deleted" });
 };
 
 module.exports = { updateProfile, getProfile, deleteAccount };

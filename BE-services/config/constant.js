@@ -7,6 +7,7 @@ const AUTH_CONFIG = {
     expiresIn: "1h",
   },
   COOKIE: {
+    path: "/",
     sameSite: "lax",
     secure: true,
     httpOnly: true,

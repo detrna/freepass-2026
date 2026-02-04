@@ -11,6 +11,7 @@ const authenticate = (req, res, next) => {
     const decoded = jwt.verify(accessToken, process.env.JWT_ACCESS_KEY);
     req.user = decoded;
     next();
+    return;
   } catch (err) {
     console.log("--- AUTH ERROR ---");
     console.log("Error Name:", err.name);
