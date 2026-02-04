@@ -10,8 +10,8 @@ const Menu = {
   },
   updateMenu: async (menu) => {
     const [result] = await pool.query(
-      "UPDATE menu SET name = ?, price = ?, stock = ?",
-      [menu.name, menu.price, menu.stock],
+      "UPDATE menu SET name = ?, price = ?, stock = ? WHERE id = ?",
+      [menu.name, menu.price, menu.stock, menu.id],
     );
     return result;
   },
