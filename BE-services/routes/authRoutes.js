@@ -9,5 +9,6 @@ router.post("/register", validateRegister, authController.register);
 router.post("/login", validateLogin, authController.login);
 router.post("/refresh", authController.refresh);
 router.delete("/logout", authenticate, authController.logout);
+router.get("/fetch-cookie", authenticate, authController.fetchCookie);
 
 module.exports = router;
