@@ -7,8 +7,20 @@ const { roleGuard } = require("../middleware/roleGuard");
 router.post(
   "/create-menu",
   authenticate,
-  //roleGuard("owner"),
+  roleGuard("owner"),
   ownerController.createMenu,
+);
+router.put(
+  "/update-menu",
+  authenticate,
+  roleGuard("owner"),
+  ownerController.updateMenu,
+);
+router.delete(
+  "/delete-menu/:id",
+  authenticate,
+  roleGuard("owner"),
+  ownerController.deleteMenu,
 );
 
 module.exports = router;

@@ -149,4 +149,9 @@ const logout = (req, res) => {
   res.json({ message: "Successfully logged out" });
 };
 
-module.exports = { register, login, refresh, logout };
+const fetchCookie = (req, res) => {
+  const user = req.user;
+  res.json(user);
+};
+
+module.exports = { register, login, refresh, logout, fetchCookie };
