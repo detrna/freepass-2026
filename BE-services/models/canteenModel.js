@@ -3,7 +3,7 @@ const pool = require("../config/db");
 const Canteen = {
   getCanteenListing: async () => {
     const [rows] = await pool.query(
-      "SELECT c.id as canteenId, c.name AS canteenName, m.* FROM canteen c INNER JOIN menu m ON c.id = m.canteen_id",
+      "SELECT c.*, m.id AS menu_id, m.name AS menu_name, m.price AS menu_price, m.stock AS menu_stock, m.canteen_id AS menu_canteen_id FROM canteen c INNER JOIN menu m ON c.id = m.canteen_id",
     );
     return rows;
   },

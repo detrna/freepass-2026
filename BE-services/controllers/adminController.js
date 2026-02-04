@@ -49,7 +49,7 @@ const updateUser = async (req, res) => {
 const createCanteen = async (req, res) => {
   const { name, phone, user_id } = req.body;
 
-  const existingCanteen = Canteen.findByUserId(user_id);
+  const existingCanteen = await Canteen.findByUserId(user_id);
   if (existingCanteen)
     return res
       .status(400)
