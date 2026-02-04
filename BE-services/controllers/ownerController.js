@@ -10,6 +10,9 @@ const createMenu = async (req, res) => {
     stock,
     canteen_id: user.canteen_id,
   };
+
+  console.log(menu);
+
   await Menu.createMenu(menu);
   res.json({ message: "Menu succesfully added" });
 };
