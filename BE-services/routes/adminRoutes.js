@@ -18,5 +18,17 @@ router.delete(
   roleGuard("admin"),
   adminController.deleteUser,
 );
+router.post(
+  "/register-canteen",
+  authenticate,
+  roleGuard("admin"),
+  adminController.createCanteen,
+);
+router.put(
+  "/edit-canteen",
+  authenticate,
+  roleGuard("admin"),
+  adminController.updateCanteen,
+);
 
 module.exports = router;

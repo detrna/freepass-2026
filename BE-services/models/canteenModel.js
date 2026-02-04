@@ -14,6 +14,20 @@ const Canteen = {
     );
     return rows[0];
   },
+  createCanteen: async (canteen) => {
+    const [result] = await pool.query(
+      "INSERT INTO canteen (name, phone, user_id) VALUES (?, ?, ?)",
+      [canteen.name, canteen.phone, canteen.user_id],
+    );
+    return result;
+  },
+  updateCanteen: async (canteen) => {
+    const [result] = await pool.query(
+      "UPDATE canteen SET name = ?, phone = ?, user_id = ?",
+      [canteen.name, canteen.phone, canteen.user_id],
+    );
+    return result;
+  },
 };
 
 module.exports = Canteen;

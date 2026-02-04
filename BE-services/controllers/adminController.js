@@ -1,3 +1,4 @@
+const Canteen = require("../models/canteenModel");
 const User = require("../models/userModel");
 
 const deleteUser = async (req, res) => {
@@ -45,4 +46,38 @@ const updateUser = async (req, res) => {
   }
 };
 
-module.exports = { deleteUser, updateUser };
+const createCanteen = async (req, res) => {
+  const { name, phone, user_id } = req.body;
+
+  const existingCanteen = Canteen.findByUserId(user_id);
+  if (existingCanteen)
+    return res
+      .status(400)
+      .json({ message: "This account already has a canteen registered" });
+
+  const canteen = {
+    name,
+    phone,
+    user_id,
+  };
+
+  await Canteen.createCanteen(canteen);
+  res.json({ message: "Canteen added successfully" }, canteen);
+};
+
+const updateCanteen = async (req, res) => {
+  const { name, phone, user_id } = req.body;
+
+  const existingCanteen = await Canteen.findByUserId(user_id);
+
+  const canteen = {
+    name: name || existingCanteen.name,
+    phone: phone || existingCanteen.phone,
+    user_id: user_id || existingCanteen.user_id,
+  };
+
+  await Canteen.updateCanteen(canteen);
+  res.json({ message: "Canteen successfully updated" });
+};
+
+module.exports = { deleteUser, updateUser, createCanteen, updateCanteen };
