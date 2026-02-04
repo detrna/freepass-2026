@@ -5,8 +5,6 @@ const authenticate = (req, res, next) => {
   if (!accessToken)
     return res.status(403).json({ message: "User not logged in" });
 
-  console.log(process.env.JWT_ACCESS_KEY);
-
   try {
     const decoded = jwt.verify(accessToken, process.env.JWT_ACCESS_KEY);
     req.user = decoded;
@@ -21,7 +19,9 @@ const authenticate = (req, res, next) => {
       message: "Session has expired",
       code: "ACCESS_TOKEN_EXPIRED",
       postmanOnlyMessage:
-        "Postman will fetch /api/auth/refresh endpoint in the background, thus the session will be refreshed. Please send the API request again",
+        "Postman will fetch /api/auth/refresh endpoint in the background, thus the session will be refreshed automatically. Please send the API request again",
+      postmanNotes:
+        "Normally, Front-end side will refetch the endpoint in the background after session refreshed. But, unfortunately Postman can't do such thing due to cookie set synchronazation issues. Furthermore, I decided to just keep it this way for clarity purposes",
     });
   }
 };

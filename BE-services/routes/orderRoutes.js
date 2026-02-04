@@ -5,16 +5,34 @@ const { authenticate } = require("../middleware/authenticate");
 const { roleGuard } = require("../middleware/roleGuard");
 
 router.post(
-  "/create-order",
+  "/create",
   authenticate,
   roleGuard("student"),
   orderController.createOrder,
 );
 router.get(
-  "/view-incoming-orders",
+  "/incoming-orders",
   authenticate,
   roleGuard("owner"),
   orderController.viewIncomingOrders,
+);
+router.get(
+  "/placed-orders",
+  authenticate,
+  roleGuard("student"),
+  orderController.viewPlacedOrders,
+);
+router.put(
+  "/cancel",
+  authenticate,
+  roleGuard("student"),
+  orderController.cancelOrder,
+);
+router.delete(
+  "/delete",
+  authenticate,
+  roleGuard("owner"),
+  orderController.deleteOrder,
 );
 /*
 router.put(

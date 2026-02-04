@@ -14,6 +14,13 @@ const Canteen = {
     );
     return rows[0];
   },
+  findByMenuId: async (id) => {
+    const [rows] = await pool.query(
+      "SELECT c.* FROM canteen c INNER JOIN menu m ON c.id = m.canteen_id WHERE m.id = ?",
+      [id],
+    );
+    return rows[0];
+  },
   createCanteen: async (canteen) => {
     const [result] = await pool.query(
       "INSERT INTO canteen (name, phone, user_id) VALUES (?, ?, ?)",
