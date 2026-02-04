@@ -13,13 +13,13 @@ const userRoutes = require("./routes/userRoutes.js");
 const canteenRoutes = require("./routes/canteenRoutes.js");
 const menuRoutes = require("./routes/menuRoutes.js");
 const adminRoutes = require("./routes/adminRoutes.js");
-const ownerRoutes = require("./routes/ownerRoutes.js");
+const orderRoutes = require("./routes/orderRoutes.js");
 
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/canteen", canteenRoutes);
 app.use("/api/menu", menuRoutes);
 app.use("/api/admin", adminRoutes);
-app.use("/api/owner", ownerRoutes);
+app.use("/api/order", orderRoutes);
 
 app.listen(PORT);
