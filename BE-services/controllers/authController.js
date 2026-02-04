@@ -99,8 +99,7 @@ const login = async (req, res) => {
   res.json({ message: "Successfully logged in" });
 };
 
-const refresh = (req, res) => {
-  console.log("Refresh hit");
+const refresh = async (req, res) => {
   const refreshToken = req.cookies.refresh_token;
 
   if (!refreshToken)
@@ -108,13 +107,17 @@ const refresh = (req, res) => {
 
   try {
     const user = jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY);
-    console.log(user);
 
-    const jwtPayload = {
+    let jwtPayload = {
       id: user.id,
       name: user.name,
       role: user.role,
     };
+
+    if (user.role === "owner") {
+      const canteen = await Canteen.findByUserId(user.id);
+      jwtPayload = { ...jwtPayload, canteen_id: canteen.id };
+    }
 
     console.log(AUTH_CONFIG.ACCESS_TOKEN_EXPIRY);
 

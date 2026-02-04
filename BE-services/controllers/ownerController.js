@@ -16,26 +16,32 @@ const createMenu = async (req, res) => {
 };
 
 const updateMenu = async (req, res) => {
-  const user = req.user;
-  const { id, name, price, stock } = req.body;
+  try {
+    const user = req.user;
+    const { id, name, price, stock } = req.body;
 
-  const currentMenu = await Menu.findMenuById(id);
+    const currentMenu = await Menu.findMenuById(id);
+    if (!currentMenu)
+      res.status(400).json({ message: "Such menu didn't exist" });
+    if (currentMenu.canteen_id !== user.canteen_id)
+      return res
+        .status(403)
+        .json({ message: "This user didn't own this menu" });
 
-  console.log(currentMenu);
+    const newMenu = {
+      id,
+      nama: name || currentMenu.name,
+      price: price || currentMenu.price,
+      stock: stock || currentMenu.stock,
+    };
 
-  if (!currentMenu) res.status(400).json({ message: "Such menu didn't exist" });
-  if (currentMenu.canteen_id !== user.canteen_id)
-    return res.status(403).json({ message: "This user didn't own this menu" });
+    await Menu.updateMenu(newMenu);
 
-  const newMenu = {
-    nama: name || currentMenu.name,
-    price: price || currentMenu.price,
-    stock: stock || currentMenu.stock,
-  };
-
-  await Menu.updateMenu(newMenu);
-
-  res.json({ message: "Menu updated successfully" });
+    res.json({ message: "Menu updated successfully" });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Database error" });
+  }
 };
 
 const deleteMenu = async (req, res) => {
