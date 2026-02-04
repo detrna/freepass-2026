@@ -1,7 +1,7 @@
 const AUTH_CONFIG = {
   SALT_ROUNDS: 10,
   ACCESS_TOKEN_EXPIRY: {
-    expiresIn: "15m",
+    expiresIn: "5s",
   },
   REFRESH_TOKEN_EXPIRY: {
     expiresIn: "1h",

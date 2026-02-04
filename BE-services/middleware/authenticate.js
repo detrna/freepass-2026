@@ -21,7 +21,7 @@ const authenticate = (req, res, next) => {
       message: "Session has expired",
       code: "ACCESS_TOKEN_EXPIRED",
       postmanOnlyMessage:
-        "Session will be refreshed and this endpoint is soon to be fetched again in the background. To view the result, please check the console (ctrl + alt + c)",
+        "Postman will fetch /api/auth/refresh endpoint in the background, thus the session will be refreshed. Please send the API request again",
     });
   }
 };
