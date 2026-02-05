@@ -28,11 +28,23 @@ router.put(
   roleGuard("student"),
   orderController.cancelOrder,
 );
+router.put(
+  "/close",
+  authenticate,
+  roleGuard("student"),
+  orderController.closeOrder,
+);
 router.delete(
   "/delete",
   authenticate,
   roleGuard("owner"),
   orderController.deleteOrder,
+);
+router.put(
+  "/pay",
+  authenticate,
+  roleGuard("student"),
+  orderController.handlePayment,
 );
 /*
 router.put(

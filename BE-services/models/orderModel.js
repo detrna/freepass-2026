@@ -17,8 +17,8 @@ const Order = {
   },
   getOrdersByUserId: async (id) => {
     const [rows] = await pool.query(
-      "SELECT o.*, c.id AS canteen_id, c.name AS canteen_name, m.id AS menu_id, m.name AS menu_name, u.id AS customer_id, u.name AS customer_name FROM canteen c INNER JOIN menu m ON c.id = m.canteen_id INNER JOIN orders o ON m.id = o.menu_id INNER JOIN user u ON o.user_id = u.id WHERE u.id = ?",
-      [id],
+      "SELECT o.*, c.id AS canteen_id, c.name AS canteen_name, m.id AS menu_id, m.name AS menu_name, u.id AS customer_id, u.name AS customer_name FROM canteen c INNER JOIN menu m ON c.id = m.canteen_id INNER JOIN orders o ON m.id = o.menu_id INNER JOIN user u ON o.user_id = u.id WHERE u.id = ? AND o.closed = ?",
+      [id, 0],
     );
     return rows;
   },
@@ -29,12 +29,26 @@ const Order = {
     );
     return result;
   },
+  closeOrder: async (id) => {
+    const [result] = await pool.query(
+      "UPDATE orders SET closed = ? WHERE id = ?",
+      [1, id],
+    );
+    return result;
+  },
   deleteOrder: async (id) => {
     const [result] = await pool.query("DELETE FROM orders WHERE id = ?", [id]);
     return result;
   },
   findById: async (id) => {
     const [rows] = await pool.query("SELECT * FROM orders WHERE id = ?", [id]);
+    return rows[0];
+  },
+  getPaymentDetails: async (id) => {
+    const [rows] = await pool.query(
+      "SELECT o.*, m.id AS menu_id, m.name AS menu_name, m.price AS menu_price, u.id AS customer_id, u.name AS customer_name, u.email AS customer_email, u.phone AS customer_phone, c.name AS canteen_name FROM canteen c INNER JOIN menu m ON c.id = m.canteen_id INNER JOIN orders o ON m.id = o.menu_id INNER JOIN user u ON o.user_id = u.id WHERE o.id = ?",
+      [id],
+    );
     return rows[0];
   },
 };

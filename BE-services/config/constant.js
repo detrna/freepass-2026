@@ -15,4 +15,11 @@ const AUTH_CONFIG = {
   },
 };
 
-module.exports = { AUTH_CONFIG };
+const PAYMENT_CONFIG = {
+  EXPIRY: {
+    duration: 60,
+    unit: "minutes",
+  },
+};
+
+module.exports = { AUTH_CONFIG, PAYMENT_CONFIG };

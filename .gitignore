@@ -1,8 +1,9 @@
 # Dependency folders
 node_modules/
 
-# Environment variables (Crucial!)
+# Environment variables
 .env
+.env.local
 
 # Logs
 npm-debug.log*

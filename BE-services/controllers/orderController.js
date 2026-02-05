@@ -1,3 +1,4 @@
+const { PAYMENT_CONFIG } = require("../config/constant");
 const Canteen = require("../models/canteenModel");
 const Menu = require("../models/menuModel");
 const Order = require("../models/orderModel");
@@ -7,6 +8,7 @@ const createOrder = async (req, res) => {
   const { menu_id, quantity } = req.body;
 
   const menu = await Menu.findMenuById(menu_id);
+  if (!menu) return res.status(400).json({ message: "Such menu didn't exist" });
   if (menu.stock === 0)
     return res.status(400).json({ message: "Menu is out of stock" });
 
@@ -46,12 +48,29 @@ const cancelOrder = async (req, res) => {
   const order = await Order.findById(id);
   if (!order)
     return res.status(400).json({ message: "This order didn't exist" });
-  if (!order.user_id !== user.id)
+  if (order.user_id !== user.id)
     return res.status(403).json({ message: "User didn't own this order" });
 
   await Order.cancelOrder(id);
 
   res.json({ message: "Order successfully cancelled" });
+};
+
+const closeOrder = async (req, res) => {
+  const user = req.user;
+  const { id } = req.body;
+
+  const order = await Order.findById(id);
+  if (!order)
+    return res.status(400).json({ message: "This order didn't exist" });
+  if (order.user_id !== user.id)
+    return res.status(403).json({ message: "User didn't own this order" });
+  if (order.progress_status !== "cancelled")
+    return res.status(400).json({ message: "Can't close an ongoing order" });
+
+  await Order.closeOrder(id);
+
+  res.json({ message: "Order successfully closed" });
 };
 
 const deleteOrder = async (req, res) => {
@@ -80,10 +99,74 @@ const deleteOrder = async (req, res) => {
   res.json({ message: "Order successfully deleted" });
 };
 
+const handlePayment = async (req, res) => {
+  const user = req.user;
+  const { id } = req.body;
+
+  const order = await Order.getPaymentDetails(id);
+  if (!order)
+    return res.status(400).json({ message: "This order didn't exist" });
+  if (order.user_id !== user.id)
+    return res.status(403).json({ message: "User didn't own this order" });
+
+  const serverKey = process.env.SERVER_KEY;
+  const password = "";
+  const credentials = `${serverKey}:${password}`;
+  const base64String = Buffer.from(credentials).toString("base64");
+
+  const transaction_details = {
+    order_id: id.toString(),
+    gross_amount: order.amount,
+  };
+  const customer_details = {
+    first_name: order.customer_name,
+    email: order.customer_email,
+    phone: order.customer_phone || null,
+  };
+  const item_details = [
+    {
+      id: order.menu_id,
+      name: order.menu_name,
+      price: order.menu_price,
+      quantity: order.quantity,
+      category: "Food",
+      merchant_name: order.canteen_name,
+    },
+  ];
+
+  const payload = {
+    transaction_details,
+    item_details,
+    customer_details,
+    usage_limit: 2,
+    expiry: PAYMENT_CONFIG.EXPIRY,
+  };
+
+  const url = "https://api.sandbox.midtrans.com/v1/payment-links";
+  const options = {
+    method: "POST",
+    headers: {
+      accept: "application/json",
+      "content-type": "application/json",
+      authorization: `Basic ${base64String}`,
+    },
+    body: JSON.stringify(payload),
+  };
+  try {
+    const midtransRes = await fetch(url, options);
+    const data = await midtransRes.json();
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ message: "Midtrans API error" });
+  }
+};
+
 module.exports = {
   createOrder,
   viewIncomingOrders,
   viewPlacedOrders,
   cancelOrder,
+  closeOrder,
   deleteOrder,
+  handlePayment,
 };
