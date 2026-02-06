@@ -1,3 +1,4 @@
+const { AUTH_CONFIG } = require("../config/constant");
 const Canteen = require("../models/canteenModel");
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
@@ -5,6 +6,11 @@ const bcrypt = require("bcrypt");
 const registerUser = async (req, res) => {
   try {
     const { email, password, role } = req.body;
+
+    if (!(role === "owner" || role === "admin"))
+      return res
+        .status(400)
+        .json({ message: "Role must be either owner or admin" });
 
     const existingUser = await User.findByEmail(email);
     if (existingUser)
@@ -86,6 +92,10 @@ const createCanteen = async (req, res) => {
     return res
       .status(400)
       .json({ message: "This account already has a canteen registered" });
+
+  const user = User.findById(user_id);
+  if (user.role !== "owner")
+    return res.status(400).json({ message: "User was not a canteen owner" });
 
   const canteen = {
     name,
