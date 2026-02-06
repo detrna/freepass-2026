@@ -128,15 +128,18 @@ const refresh = async (req, res) => {
   const refreshToken = req.cookies.refresh_token;
 
   if (!refreshToken)
-    return res.status(401).json({ message: "User account didn't exist" });
+    return res.status(401).json({ message: "Refresh token didn't exist" });
 
   try {
     const user = jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY);
 
     const dbToken = await User.findToken(user.id);
 
-    if (dbToken.version !== user.token_version)
+    if (!dbToken)
       return res.status(401).json({ message: "User account was removed" });
+
+    if (dbToken.version !== user.token_version)
+      return res.status(401).json({ message: "User version was updated" });
 
     let jwtPayload = {
       id: user.id,

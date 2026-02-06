@@ -16,9 +16,9 @@ const AUTH_CONFIG = {
 };
 
 const PAYMENT_CONFIG = {
-  EXPIRY: {
-    duration: 60,
-    unit: "minutes",
+  expiry: {
+    duration: 60 * 60,
+    unit: "seconds",
   },
 };
 
