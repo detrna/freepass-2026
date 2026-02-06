@@ -1,5 +1,6 @@
 const Canteen = require("../models/canteenModel");
 const User = require("../models/userModel");
+const bcrypt = require("bcrypt");
 
 const registerUser = async (req, res) => {
   try {
@@ -44,8 +45,7 @@ const deleteUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { name, email, password, phone } = req.body;
+    const { id, name, email, password, phone } = req.body;
 
     if (email) {
       const emailTaken = await User.findByEmail(email);
