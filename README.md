@@ -245,6 +245,7 @@ c. Note that any key that has the value 11, means that it was supposed to be an 
 7. Admin Account
 a. After everything was setup, register an account with the register api request
 b. Change manually the row role to admin, by xampp or, alternatively, run an sql statement in the sql server "UPDATE user SET role = 'admin' WHERE id = <row id>" OR by email "UPDATE user SET role = 'admin' WHERE email = <email> "
+c. logout and login again to the account that its role has been set
 
 
 ## **📞** Contact
