@@ -198,7 +198,46 @@ The implementation of this project MUST be in the form of a REST, gRPC, or Graph
 
 ## **🧪** API Installation
 
-> Write how to run your service in a local or development environment here. If you use Docker to serve your DBMS or your server, you will receive bonus points for your submission.
+Dependencies
+
+1. NodeJS - https://nodejs.org/en/download
+2. MySQL Database
+3. Ngrok - https://ngrok.com/download/windows
+4. Midtrans
+
+Setup
+1. NodeJS
+a. Install .msi file
+b. Clone repository
+c. Open terminal and change directory to BE-services
+d. run "npm init -y"
+e. Finally, to start the server, run "npm run dev"
+
+2. MySQL, preferably XAMPP, alternatively any pure SQL databases that can import .sql file or just simply copy and paste it to the command line.
+a. Run MySQL server or MySQL and Apache server
+b. create a schema named bcc_canteen_dzaki. Alternatively, any name and then match the database name property located in ./BE-services/config/db.js
+b. Import .sql files located in the Database Structure folder
+
+3. Ngrok
+a. Get auth token from ngrok dashboard website
+b. Run .exe file
+c. run "ngrok config add-authtoken <auth-token>"
+d. open project terminal, change directory to BE-services, and finally run "ngrok http 4000" (ngrok http <PORT>)
+
+4. Midtrans - https://dashboard.midtrans.com/register
+a. Sign in a merchant account (viable to use dummy data incase for business detail, i.e., dev sandbox)
+b. In the left nav bar, set the environment to "Sandbox", then go to integration.
+c. Continue til Download plugin step, and choose "Build yourself"
+d. set the payment notification url setting (the very top), to ngrok forwarding url, with the endpoint /api/order/notification
+
+5. Environtment (.env) file
+a. go to BE-services folder
+b. delete the ".example" and leave it as ".env"
+c. write any string value to JWT_ACCESS_KEY and JWT_REFRESH_KEY. preferably each a Base64-encoded string.
+d. fill the merchant id, client key, and server key to what given in mid trans api configuration menu earlier.
+
+6. Admin account
+a. After everything was setup,
 
 ## **📞** Contact
 
