@@ -1,6 +1,7 @@
 const { AUTH_CONFIG } = require("../config/constant");
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const updateProfile = async (req, res) => {
   try {
