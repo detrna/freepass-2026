@@ -9,11 +9,12 @@ const createOrder = async (req, res) => {
 
   const menu = await Menu.findMenuById(menu_id);
   if (!menu) return res.status(400).json({ message: "Such menu didn't exist" });
-  if (menu.stock === 0)
+  if (menu.stock === 0 || menu.stock < quantity)
     return res.status(400).json({ message: "Menu is out of stock" });
 
   const price = menu.price;
   const amount = price * quantity;
+  const decreasedStock = menu.stock - quantity;
 
   const order = {
     price,
@@ -24,7 +25,7 @@ const createOrder = async (req, res) => {
   };
 
   await Order.createOrder(order);
-  await Menu.decreaseStock(menu_id);
+  await Menu.decreaseStock(menu_id, decreasedStock);
 
   res.json({ message: "Order successfully placed" });
 };

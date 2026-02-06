@@ -25,10 +25,10 @@ const Menu = {
     const [rows] = await pool.query("SELECT * FROM menu WHERE id = ?", [id]);
     return rows[0];
   },
-  decreaseStock: async (id) => {
+  decreaseStock: async (id, stock) => {
     const [result] = await pool.query(
-      "UPDATE menu SET stock = stock - 1 WHERE id = ?",
-      [id],
+      "UPDATE menu SET stock = ? WHERE id = ?",
+      [stock, id],
     );
     return result;
   },

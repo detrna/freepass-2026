@@ -133,13 +133,17 @@ const refresh = async (req, res) => {
   try {
     const user = jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY);
 
-    const dbToken = await User.findToken(user.id);
+    const dbToken = await Token.findByUserid(user.id);
+
+    console.log(user, dbToken);
 
     if (!dbToken)
       return res.status(401).json({ message: "User account was removed" });
 
-    if (dbToken.version !== user.token_version)
-      return res.status(401).json({ message: "User version was updated" });
+    if (user.role !== "owner") {
+      if (dbToken.version !== user.token_version)
+        return res.status(401).json({ message: "User version was updated" });
+    }
 
     let jwtPayload = {
       id: user.id,
@@ -170,7 +174,8 @@ const refresh = async (req, res) => {
     return res
       .status(200)
       .json({ message: "Refresh token and session successfully refreshed" });
-  } catch {
+  } catch (err) {
+    console.log(err);
     return res.status(403).json({
       message: "Long term session has expired",
       postmanOnlyMessage: "Plase log in again",

@@ -30,7 +30,7 @@ const updateMenu = async (req, res) => {
 
     const newMenu = {
       id,
-      nama: name || currentMenu.name,
+      name: name.trim() !== "" ? name : currentMenu.name,
       price: price || currentMenu.price,
       stock: stock || currentMenu.stock,
     };
