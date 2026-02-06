@@ -17,7 +17,7 @@ router.put(
   menuController.updateMenu,
 );
 router.delete(
-  "/delete/:id",
+  "/delete",
   authenticate,
   roleGuard("owner"),
   menuController.deleteMenu,

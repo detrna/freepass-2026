@@ -46,7 +46,7 @@ const updateMenu = async (req, res) => {
 
 const deleteMenu = async (req, res) => {
   const user = req.user;
-  const { id } = req.params;
+  const { id } = req.body;
 
   const menu = await Menu.findMenuById(id);
   if (!menu) return res.status(400).json({ message: "Such menu didn't exist" });
