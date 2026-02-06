@@ -134,9 +134,6 @@ const refresh = async (req, res) => {
     const user = jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY);
 
     const dbToken = await Token.findByUserid(user.id);
-
-    console.log(user, dbToken);
-
     if (!dbToken)
       return res.status(401).json({ message: "User account was removed" });
 
