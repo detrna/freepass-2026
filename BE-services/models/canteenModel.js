@@ -35,6 +35,14 @@ const Canteen = {
     );
     return result;
   },
+  deleteCanteen: async (id) => {
+    const [result] = await pool.query("DELETE FROM canteen WHERE id = ?", [id]);
+    return result;
+  },
+  findById: async (id) => {
+    const [rows] = await pool.query("SELECT * FROM canteen WHERE id = ?", [id]);
+    return rows[0];
+  },
 };
 
 module.exports = Canteen;

@@ -112,10 +112,21 @@ const updateCanteen = async (req, res) => {
   res.json({ message: "Canteen successfully updated" });
 };
 
+const deleteCanteen = async (req, res) => {
+  const { id } = req.body;
+
+  const canteen = await Canteen.findById(id);
+  if (!canteen) res.status(400).json({ message: "Canteen didn't exist" });
+
+  await Canteen.deleteCanteen(id);
+  res.json({ message: "Canteen successfuly deleted" });
+};
+
 module.exports = {
   deleteUser,
   updateUser,
   createCanteen,
   updateCanteen,
   registerUser,
+  deleteCanteen,
 };

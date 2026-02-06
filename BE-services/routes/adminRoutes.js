@@ -12,7 +12,7 @@ router.post(
   adminController.registerUser,
 );
 router.put(
-  "/modify",
+  "/update-account",
   validatePhone,
   authenticate,
   roleGuard("admin"),
@@ -31,10 +31,16 @@ router.post(
   adminController.createCanteen,
 );
 router.put(
-  "/edit-canteen",
+  "/update-canteen",
   authenticate,
   roleGuard("admin"),
   adminController.updateCanteen,
+);
+router.delete(
+  "/delete-canteen",
+  authenticate,
+  roleGuard("admin"),
+  adminController.deleteCanteen,
 );
 
 module.exports = router;
