@@ -62,6 +62,10 @@ const updateOrder = async (req, res) => {
       return res.status(403).json({
         message: "User didn't own the canteen where this order belong",
       });
+    if (order.payment_status === 0)
+      return res
+        .status(400)
+        .json({ message: "Cannot update a yet to paid order" });
   }
 
   const updatedOrder = {
@@ -69,7 +73,7 @@ const updateOrder = async (req, res) => {
     progress_status: progress_status || "cancelled",
   };
 
-  await Order.cancelOrder(updatedOrder);
+  await Order.updateProgress(updatedOrder);
 
   res.json({
     message: `Progress status successfully set to ${updatedOrder.progress_status}`,
