@@ -93,7 +93,7 @@ const createCanteen = async (req, res) => {
       .status(400)
       .json({ message: "This account already has a canteen registered" });
 
-  const user = User.findById(user_id);
+  const user = await User.findById(user_id);
   if (user.role !== "owner")
     return res.status(400).json({ message: "User was not a canteen owner" });
 
