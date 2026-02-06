@@ -17,7 +17,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"email\": \"Dzaki@gmail.com\",\r\n  \"password\": \"123\",\r\n  \"confirmPassword\": \"123\"\r\n}",
+              "raw": "{\r\n  \"email\": \"\",\r\n  \"password\": \"\",\r\n  \"confirmPassword\": \"\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -47,7 +47,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"email\": \"owner2@gmail.com\",\r\n   \"password\": \"123\"\r\n}",
+              "raw": "{\r\n    \"email\": \"\",\r\n   \"password\": \"\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -628,7 +628,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"name\": \"\",\r\n    \"email\": \"\",\r\n    \"oldPassword\": \"\",\r\n    \"newPassword\": \"\",\r\n    \"phone\": \"\"\r\n}\r\n\r\n\r\n/*\r\n{\r\n    \"name\": \"08112346515\"\r\n}\r\n*/",
+              "raw": "{\r\n    \"id\": 11,\r\n    \"name\": \"\",\r\n    \"email\": \"\",\r\n    \"password\": \"\",\r\n    \"phone\": \"\"\r\n}\r\n\r\n\r\n/*\r\n{\r\n    \"name\": \"08112346515\"\r\n}\r\n*/",
               "options": {
                 "raw": {
                   "language": "json"
@@ -636,7 +636,7 @@
               }
             },
             "url": {
-              "raw": "http://localhost:4000/api/admin/update-account",
+              "raw": "http://localhost:4000/api/admin/update-account/",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -645,7 +645,8 @@
               "path": [
                 "api",
                 "admin",
-                "update-account"
+                "update-account",
+                ""
               ]
             }
           },
@@ -717,7 +718,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"name\": \"\",\r\n    \"phone\": \"\",\r\n    \"user_id\": 3\r\n}",
+              "raw": "{\r\n    \"name\": \"\",\r\n    \"phone\": \"\",\r\n    \"user_id\": 11\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
