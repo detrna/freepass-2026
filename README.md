@@ -204,6 +204,7 @@ Dependencies
 2. MySQL Database
 3. Ngrok - https://ngrok.com/download/windows
 4. Midtrans
+5. Postman - https://www.postman.com/downloads/
 
 Setup
 1. NodeJS
@@ -236,8 +237,15 @@ b. delete the ".example" and leave it as ".env"
 c. write any string value to JWT_ACCESS_KEY and JWT_REFRESH_KEY. preferably each a Base64-encoded string.
 d. fill the merchant id, client key, and server key to what given in mid trans api configuration menu earlier.
 
-6. Admin account
-a. After everything was setup,
+6. Postman
+a. After the install, import the Postman Collection export located in the folder "Postman Exports".
+b. Change port if it didn't match the one set in the .env file
+c. Note that any key that has the value 11, means that it was supposed to be an integer
+
+7. Admin Account
+a. After everything was setup, register an account with the register api request
+b. Change manually the row role to admin, by xampp or, alternatively, run an sql statement in the sql server "UPDATE user SET role = 'admin' WHERE id = <row id>" OR by email "UPDATE user SET role = 'admin' WHERE email = <email> "
+
 
 ## **📞** Contact
 
