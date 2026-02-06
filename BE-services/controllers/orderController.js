@@ -41,19 +41,39 @@ const viewPlacedOrders = async (req, res) => {
   res.json(orders);
 };
 
-const cancelOrder = async (req, res) => {
+const updateOrder = async (req, res) => {
   const user = req.user;
-  const { id } = req.body;
+  const { id, progress_status } = req.body;
+
+  if (progress_status) {
+    if (!(progress_status === "cooking" || progress_status === "finished"))
+      return res.status(400).json({ message: "Status not recognized" });
+  }
 
   const order = await Order.findById(id);
   if (!order)
     return res.status(400).json({ message: "This order didn't exist" });
-  if (order.user_id !== user.id)
-    return res.status(403).json({ message: "User didn't own this order" });
+  if (user.role === "student") {
+    if (order.user_id !== user.id)
+      return res.status(403).json({ message: "User didn't own this order" });
+  } else {
+    const canteen = await Canteen.findByMenuId(order.menu_id);
+    if (canteen.id !== user.canteen_id)
+      return res.status(403).json({
+        message: "User didn't own the canteen where this order belong",
+      });
+  }
 
-  await Order.cancelOrder(id);
+  const updatedOrder = {
+    id,
+    progress_status: progress_status || "cancelled",
+  };
 
-  res.json({ message: "Order successfully cancelled" });
+  await Order.cancelOrder(updatedOrder);
+
+  res.json({
+    message: `Progress status successfully set to ${updatedOrder.progress_status}`,
+  });
 };
 
 const closeOrder = async (req, res) => {
@@ -161,12 +181,40 @@ const handlePayment = async (req, res) => {
   }
 };
 
+const handleNotification = async (req, res) => {
+  console.log("Notif Hit");
+  const { order_id, transaction_status, fraud_status } = req.body;
+
+  if (
+    !(transaction_status === "capture" || transaction_status === "settlement")
+  ) {
+    console.log("payment:", transaction_status);
+    return res.status(200).json({ message: "Payment has yet to be made" });
+  }
+
+  if (transaction_status === "caputre" && fraud_status !== "accept") {
+    console.log("Card", fraud_status);
+    return res
+      .status(200)
+      .json({ message: "Fraud status has yet to be accepted" });
+  }
+
+  const order = {
+    id: order_id.split("-")[0],
+    payment_status: true,
+  };
+
+  console.log(order);
+  await Order.updatePayment(order);
+};
+
 module.exports = {
   createOrder,
   viewIncomingOrders,
   viewPlacedOrders,
-  cancelOrder,
+  updateOrder,
   closeOrder,
   deleteOrder,
   handlePayment,
+  handleNotification,
 };

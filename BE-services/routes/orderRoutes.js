@@ -22,12 +22,7 @@ router.get(
   roleGuard("student"),
   orderController.viewPlacedOrders,
 );
-router.put(
-  "/cancel",
-  authenticate,
-  roleGuard("student"),
-  orderController.cancelOrder,
-);
+router.put("/update", authenticate, orderController.updateOrder);
 router.put(
   "/close",
   authenticate,
@@ -46,13 +41,6 @@ router.put(
   roleGuard("student"),
   orderController.handlePayment,
 );
-/*
-router.put(
-  "/update-order",
-  authenticate,
-  roleGuard("owner"),
-  orderController.,
-);
-*/
+router.post("/notification", orderController.handleNotification);
 
 module.exports = router;

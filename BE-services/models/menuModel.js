@@ -39,6 +39,12 @@ const Menu = {
     );
     return result;
   },
+  viewMenus: async (canteen_id) => {
+    const [rows] = await pool.query("SELECT * FROM menu WHERE canteen_id = ?", [
+      canteen_id,
+    ]);
+    return rows;
+  },
 };
 
 module.exports = Menu;

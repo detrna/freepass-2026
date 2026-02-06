@@ -1,4 +1,4 @@
-const datatypeGuard = (dataType) => {
+const datatypeGuard = (inputList, dataType) => {
   return (req, res, next) => {
     const keys = req.body;
 
@@ -14,7 +14,7 @@ const datatypeGuard = (dataType) => {
 
       if (typeof value !== dataType[i])
         return res.status(400).json({
-          message: `${keys[value]} value must be a ${dataType[i]}`,
+          message: `${value} value must be a ${dataType[i]}`,
         });
     }
     next();

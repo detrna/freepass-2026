@@ -22,5 +22,7 @@ router.delete(
   roleGuard("owner"),
   menuController.deleteMenu,
 );
+router.get("/", authenticate, menuController.viewMenus);
+router.get("/:canteen_id", authenticate, menuController.viewMenus);
 
 module.exports = router;

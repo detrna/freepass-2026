@@ -58,4 +58,14 @@ const deleteMenu = async (req, res) => {
   res.json({ message: "Menu deleted successfully" });
 };
 
-module.exports = { createMenu, updateMenu, deleteMenu };
+const viewMenus = async (req, res) => {
+  const user = req.user;
+  const id = user.canteen_id || req.params.canteen_id;
+
+  const menus = await Menu.viewMenus(id);
+  if (!menus) res.json({ message: "Menu didn't exist" });
+
+  res.json(menus);
+};
+
+module.exports = { createMenu, updateMenu, deleteMenu, viewMenus };

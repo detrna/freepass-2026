@@ -3,7 +3,6 @@ const router = express.Router();
 const authController = require("../controllers/authController");
 const { validateRegister } = require("../middleware/validateRegister");
 const { authenticate } = require("../middleware/authenticate");
-const { validateLogin } = require("../middleware/validateLogin");
 const { inputGuard } = require("../middleware/inputGuard");
 
 router.post("/register", validateRegister, authController.register);

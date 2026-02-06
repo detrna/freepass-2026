@@ -22,10 +22,10 @@ const Order = {
     );
     return rows;
   },
-  cancelOrder: async (id) => {
+  updateProgress: async (order) => {
     const [result] = await pool.query(
       "UPDATE orders SET progress_status = ? WHERE id = ?",
-      ["cancelled", id],
+      [order.status, order.id],
     );
     return result;
   },
@@ -50,6 +50,13 @@ const Order = {
       [id],
     );
     return rows[0];
+  },
+  updatePayment: async (order) => {
+    const [result] = await pool.query(
+      "UPDATE orders SET payment_status = ? WHERE id = ?",
+      [order.payment_status, order.id],
+    );
+    return result;
   },
 };
 

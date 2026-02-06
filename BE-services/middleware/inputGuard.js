@@ -2,9 +2,7 @@ const inputGuard = (inputList, dataType) => {
   return (req, res, next) => {
     const keys = req.body;
 
-    for (let i = 0; i < inputList.length; i++) {
-      const value = keys[inputList[i]];
-
+    for (const [value] of keys) {
       if (
         !value || typeof value !== "string"
           ? toString(value).trim() === ""

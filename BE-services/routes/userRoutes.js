@@ -6,5 +6,6 @@ const { validatePhone } = require("../middleware/validatePhone");
 
 router.put("/", validatePhone, authenticate, userController.updateProfile);
 router.get("/", authenticate, userController.getProfile);
+router.delete("/", authenticate, userController.deleteAccount);
 
 module.exports = router;
