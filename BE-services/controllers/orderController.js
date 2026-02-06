@@ -54,7 +54,12 @@ const updateOrder = async (req, res) => {
         progress_status === "delivered"
       )
     )
-      return res.status(400).json({ message: "Status not recognized" });
+      return res
+        .status(400)
+        .json({
+          message:
+            "Status not recognized, must be either cooking, ready or delivered",
+        });
   }
 
   const order = await Order.findById(id);
