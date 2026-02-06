@@ -111,7 +111,51 @@ THEN  => The system will delete the account from the system
 
 ## **👪** Entities and Actors
 
-We want to see your perspective about these problems. You can define various types of entities or actors. One thing for sure, there is no true or false statement to define the entities. As long as the results are understandable, then go for it! 🚀
+Actor: user
+id
+name
+email
+hashed_password
+phone
+role
+
+Entity: canteen
+id
+name
+phone
+user_id
+
+Entity: menu
+id
+name
+price
+stock
+canteen_id
+
+Entity: orders
+id
+quantity
+amount
+progress_status
+payment_status
+closed
+date
+menu_id
+user_id
+
+Entity: feedback
+id
+content
+order_id
+user_id
+canteen_id
+
+Entity: refresh_token
+id
+hashed_token
+version
+user_id
+
 
 ## **📘** References
 
