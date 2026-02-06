@@ -1,6 +1,38 @@
 const Canteen = require("../models/canteenModel");
 const User = require("../models/userModel");
 
+const registerUser = async (req, res) => {
+  try {
+    const { email, password, role } = req.body;
+
+    const existingUser = await User.findByEmail(email);
+    if (existingUser)
+      return res.status(400).json({ message: "Email was already taken" });
+
+    const name = email.split("@")[0];
+    const hashedPassword = await bcrypt.hash(password, AUTH_CONFIG.SALT_ROUNDS);
+
+    const user = {
+      name,
+      email,
+      password: hashedPassword,
+      role: role || "student",
+    };
+
+    await User.createUser(user);
+
+    const payload = {
+      message: "Account succesfully registered",
+      displayedMessage: `Account successfully registered by the name of ${name} and email of ${email}`,
+    };
+
+    return res.status(201).json(payload);
+  } catch (err) {
+    console.log(err);
+    return res.sendStatus(500).json({ error: err.name });
+  }
+};
+
 const deleteUser = async (req, res) => {
   const { id, email } = req.body;
   let account;
@@ -80,4 +112,10 @@ const updateCanteen = async (req, res) => {
   res.json({ message: "Canteen successfully updated" });
 };
 
-module.exports = { deleteUser, updateUser, createCanteen, updateCanteen };
+module.exports = {
+  deleteUser,
+  updateUser,
+  createCanteen,
+  updateCanteen,
+  registerUser,
+};

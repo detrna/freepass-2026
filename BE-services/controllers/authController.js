@@ -3,10 +3,11 @@ const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const { AUTH_CONFIG } = require("../config/constant");
 const Canteen = require("../models/canteenModel");
+const Token = require("../models/tokenModel");
 
 const register = async (req, res) => {
   try {
-    const { email, password, role } = req.body;
+    const { email, password } = req.body;
 
     const existingUser = await User.findByEmail(email);
     if (existingUser)
@@ -19,23 +20,16 @@ const register = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      role: role || "student",
+      role: "student",
     };
 
     const createdUser = await User.createUser(user);
 
-    const payload = {
-      message: "Account succesfully registered",
-      displayedMessage: `Account successfully registered by the name of ${name} and saved email by ${email}`,
-    };
-
-    if (role === "owner") return res.status(201).json(payload);
-
-    //sign jwt
     const jwtPayload = {
       id: createdUser.insertId,
       name: name,
       role: "student",
+      token_version: 2,
     };
 
     const accessToken = jwt.sign(
@@ -44,15 +38,32 @@ const register = async (req, res) => {
       AUTH_CONFIG.ACCESS_TOKEN_EXPIRY,
     );
     res.cookie("access_token", accessToken, AUTH_CONFIG.COOKIE);
+
     const refreshToken = jwt.sign(
       jwtPayload,
       process.env.JWT_REFRESH_KEY,
       AUTH_CONFIG.REFRESH_TOKEN_EXPIRY,
     );
-
     res.cookie("refresh_token", refreshToken, AUTH_CONFIG.COOKIE);
 
-    res.status(201).json(payload);
+    const hashedToken = await bcrypt.hash(
+      refreshToken,
+      AUTH_CONFIG.SALT_ROUNDS,
+    );
+
+    const token = {
+      value: hashedToken,
+      user_id: createdUser.insertId,
+    };
+
+    await Token.insertToken(token);
+
+    const payload = {
+      message: "Account succesfully registered",
+      displayedMessage: `Account successfully registered by the name of ${name} and email of ${email}`,
+    };
+
+    return res.status(201).json(payload);
   } catch (err) {
     console.log(err);
     return res.sendStatus(500).json({ error: err.name });
@@ -75,6 +86,8 @@ const login = async (req, res) => {
     id: user.id,
     name: user.name,
     role: user.role,
+    token_version:
+      user.role === "student" ? user.token_version + 1 : user.token_version,
   };
 
   if (user.role === "owner") {
@@ -96,6 +109,18 @@ const login = async (req, res) => {
   res.cookie("refresh_token", refreshToken, AUTH_CONFIG.COOKIE);
   res.cookie("access_token", accessToken, AUTH_CONFIG.COOKIE);
 
+  const hashedToken = await bcrypt.hash(refreshToken, AUTH_CONFIG.SALT_ROUNDS);
+  const dbToken = await Token.findByUserid(user.id);
+
+  const token = {
+    value: hashedToken,
+    user_id: user.id,
+    version:
+      user.role === "student" ? user.token_version + 1 : user.token_version,
+  };
+
+  dbToken ? await Token.updateToken(token) : await Token.insertToken(token);
+
   res.json({ message: "Successfully logged in" });
 };
 
@@ -108,18 +133,22 @@ const refresh = async (req, res) => {
   try {
     const user = jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY);
 
+    const dbToken = await User.findToken(user.id);
+
+    if (dbToken.version !== user.token_version)
+      return res.status(401).json({ message: "User account was removed" });
+
     let jwtPayload = {
       id: user.id,
       name: user.name,
       role: user.role,
+      token_version: user.token_version,
     };
 
     if (user.role === "owner") {
       const canteen = await Canteen.findByUserId(user.id);
       jwtPayload = { ...jwtPayload, canteen_id: canteen.id };
     }
-
-    console.log(AUTH_CONFIG.ACCESS_TOKEN_EXPIRY);
 
     const accessToken = jwt.sign(
       jwtPayload,

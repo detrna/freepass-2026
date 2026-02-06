@@ -10,11 +10,7 @@ const authenticate = (req, res, next) => {
     req.user = decoded;
     next();
     return;
-  } catch (err) {
-    console.log("--- AUTH ERROR ---");
-    console.log("Error Name:", err.name);
-    console.log("Error Message:", err.message);
-
+  } catch {
     return res.status(401).json({
       message: "Session has expired",
       code: "ACCESS_TOKEN_EXPIRED",

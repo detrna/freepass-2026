@@ -46,7 +46,13 @@ const updateOrder = async (req, res) => {
   const { id, progress_status } = req.body;
 
   if (progress_status) {
-    if (!(progress_status === "cooking" || progress_status === "finished"))
+    if (
+      !(
+        progress_status === "cooking" ||
+        progress_status === "ready" ||
+        progress_status === "delivered"
+      )
+    )
       return res.status(400).json({ message: "Status not recognized" });
   }
 

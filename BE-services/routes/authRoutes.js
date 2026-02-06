@@ -6,11 +6,7 @@ const { authenticate } = require("../middleware/authenticate");
 const { inputGuard } = require("../middleware/inputGuard");
 
 router.post("/register", validateRegister, authController.register);
-router.post(
-  "/login",
-  inputGuard(["email", "password"], ["string", "string"]),
-  authController.login,
-);
+router.post("/login", authController.login);
 router.post("/refresh", authController.refresh);
 router.delete("/logout", authenticate, authController.logout);
 router.get("/fetch-cookie", authenticate, authController.fetchCookie);

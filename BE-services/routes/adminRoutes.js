@@ -5,6 +5,12 @@ const { authenticate } = require("../middleware/authenticate");
 const { roleGuard } = require("../middleware/roleGuard");
 const { validatePhone } = require("../middleware/validatePhone");
 
+router.post(
+  "/register-account",
+  authenticate,
+  roleGuard("admin"),
+  adminController.registerUser,
+);
 router.put(
   "/modify",
   validatePhone,

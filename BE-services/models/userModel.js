@@ -2,9 +2,10 @@ const pool = require("../config/db");
 
 const User = {
   findByEmail: async (email) => {
-    const [rows] = await pool.query("SELECT * FROM user WHERE email = ?", [
-      email,
-    ]);
+    const [rows] = await pool.query(
+      "SELECT u.*, r.version AS token_version FROM user u LEFT JOIN refresh_token r ON u.id = r.user_Id WHERE email = ?",
+      [email],
+    );
     return rows[0];
   },
   findById: async (id) => {
